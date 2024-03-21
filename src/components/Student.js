@@ -7,7 +7,18 @@ import { Button, Container, Paper } from '@mui/material';
 export default function Student() {
   const paperStyle = { padding: '50px 20px', width: 600, margin: '20px auto' }
 
-  // POST
+  // 定义 GET
+  const [students, setStudents] = React.useState([])
+
+  React.useEffect(() => {
+    fetch("http://localhost:8080/student/getAll")
+      .then(res => res.json())
+      .then((result) => {
+        setStudents(result);
+      })
+  })
+
+  // 定义 POST
   const [name, setName] = React.useState('')
   const [address, setAddress] = React.useState('')
 
@@ -24,16 +35,34 @@ export default function Student() {
     })
   }
 
-  // GET
-  const [students, setStudents] = React.useState([])
+  // 定义 DELETE
+  const handleDelete = (studentId) => {
+    fetch(`http://localhost:8080/student/delete/${studentId}`, {
+      method: "DELETE"
+    }).then(() => {
+      console.log(`Student with ID ${studentId} deleted`);
+      // 删除学生后更新页面以显示删除后的学生信息
+      setStudents(students.filter(student => student.id !== studentId));
+    });
+  }
 
-  React.useEffect(() => {
-    fetch("http://localhost:8080/student/getAll")
-      .then(res => res.json())
-      .then((result) => {
-        setStudents(result);
-      })
-  })
+
+  // 定义 PUT
+  const handleUpdate = (studentId) => {
+    const updatedStudent = { name, address }
+    fetch(`http://localhost:8080/student/update/${studentId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedStudent)
+    }).then(() => {
+      console.log(`Student with ID ${studentId} updated`);
+      // 更新学生信息后更新页面以显示最新的学生信息
+      useEffect();
+    });
+  }
+
+
+
 
   return (
     <Container>
@@ -72,9 +101,16 @@ export default function Student() {
         <h1>Students</h1>
         {students.map(student => (
           <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={student.id}>
-            Id:{student.id}<br/>
-            Name:{student.name}<br/>
-            Address:{student.address}
+            <div>
+              Id: {student.id}<br />
+              Name: {student.name}<br />
+              Address: {student.address}
+            </div>
+
+
+            <Button variant="contained" color="secondary" onClick={() => handleDelete(student.id)}>
+              Delete
+            </Button>
 
           </Paper>
         ))}
