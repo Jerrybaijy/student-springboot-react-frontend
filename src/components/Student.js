@@ -7,21 +7,23 @@ import { Button, Container, Paper } from '@mui/material';
 export default function Student() {
   const paperStyle = { padding: '50px 20px', width: 600, margin: '20px auto' }
 
-  // 定义 GET
   const [students, setStudents] = React.useState([])
+  const [name, setName] = React.useState('')
+  const [address, setAddress] = React.useState('')
 
-  React.useEffect(() => {
+  // 定义 getAll
+  const fetchStudents = () => {
     fetch("http://localhost:8080/student/getAll")
       .then(res => res.json())
       .then((result) => {
         setStudents(result);
       })
-  })
+  }
 
-  // 定义 POST
-  const [name, setName] = React.useState('')
-  const [address, setAddress] = React.useState('')
+  // 在组件挂载时获取学生信息
+  React.useEffect(fetchStudents, [])
 
+  // 定义 add
   const handleClick = (e) => {
     e.preventDefault()
     const student = { name, address }
@@ -32,10 +34,11 @@ export default function Student() {
       body: JSON.stringify(student)
     }).then(() => {
       console.log("New Student added")
+      fetchStudents();
     })
   }
 
-  // 定义 DELETE
+  // 定义 delete
   const handleDelete = (studentId) => {
     fetch(`http://localhost:8080/student/delete/${studentId}`, {
       method: "DELETE"
@@ -46,10 +49,11 @@ export default function Student() {
     });
   }
 
-
-  // 定义 PUT
+  // 定义 update
   const handleUpdate = (studentId) => {
-    const updatedStudent = { name, address }
+    const updatedName = name;
+    const updatedAddress = address;
+    const updatedStudent = { name: updatedName, address: updatedAddress }
     fetch(`http://localhost:8080/student/update/${studentId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -57,11 +61,9 @@ export default function Student() {
     }).then(() => {
       console.log(`Student with ID ${studentId} updated`);
       // 更新学生信息后更新页面以显示最新的学生信息
-      useEffect();
+      fetchStudents();
     });
   }
-
-
 
 
   return (
@@ -98,7 +100,7 @@ export default function Student() {
 
       {/* 展示框 */}
       <Paper elevation={3} style={paperStyle}>
-        <h1>Students</h1>
+        <h1>List Students</h1>
         {students.map(student => (
           <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={student.id}>
             <div>
@@ -107,11 +109,13 @@ export default function Student() {
               Address: {student.address}
             </div>
 
+            <Button variant="contained" color="primary" onClick={() => handleUpdate(student.id)}>
+              Modify
+            </Button>
 
             <Button variant="contained" color="secondary" onClick={() => handleDelete(student.id)}>
               Delete
             </Button>
-
           </Paper>
         ))}
       </Paper>
