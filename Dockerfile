@@ -17,4 +17,4 @@ COPY . .
 RUN npm run build
 
 # 在容器中运行的命令
-CMD ["npm", "start"]
+ENTRYPOINT ["npm", "start"]
