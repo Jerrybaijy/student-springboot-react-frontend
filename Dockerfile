@@ -1,23 +1,11 @@
-# 使用官方 Node.js 作为基础镜像
-FROM node:14-alpine
+# 使用官方 nginx 镜像作为基础镜像
+FROM nginx:latest
 
-# 设置工作目录
-WORKDIR /app
-
-# 复制 package.json 和 package-lock.json（如果存在）到工作目录
-COPY package*.json ./
-
-# 安装依赖
-RUN npm install
-
-# 复制源代码到工作目录
-COPY . .
+# 将本地静态资源文件夹复制到 nginx 默认的静态文件目录下
+COPY ./build /usr/share/nginx/html
 
 # 暴露容器内的 8080 端口
 EXPOSE 8080
 
-# 构建生产环境应用程序
-RUN npm run build
-
-# 在容器中运行的命令
-ENTRYPOINT ["npm", "start"]
+# 使用 nginx 镜像默认的启动命令
+CMD ["nginx", "-g", "daemon off;"]
