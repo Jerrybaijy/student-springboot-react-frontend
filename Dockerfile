@@ -13,6 +13,9 @@ RUN npm install
 # 复制源代码到工作目录
 COPY . .
 
+# 暴露容器内的 8080 端口
+EXPOSE 8080
+
 # 构建生产环境应用程序
 RUN npm run build
 
