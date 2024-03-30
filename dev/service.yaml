@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-springboot-react-frontend
+spec:
+  selector:
+    app: student-springboot-react-frontend
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
