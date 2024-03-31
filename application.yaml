@@ -7,7 +7,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/Jerrybaijy/student-springboot-react-frontend.git
+    repoURL: https://gitlab.com/jerrybai/student-springboot-react-frontend.git
     targetRevision: HEAD
     path: dev
   
