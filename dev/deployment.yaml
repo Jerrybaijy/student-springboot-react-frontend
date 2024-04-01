@@ -17,6 +17,3 @@ spec:
           image: jerrybaijy/student-springboot-react-frontend:v1.0
           ports:
             - containerPort: 8080
-          env:
-            - name: PORT
-              value: "8080"
