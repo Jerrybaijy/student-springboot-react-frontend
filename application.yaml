@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: student-springboot-react-frontend
+  name: frontend
   namespace: argocd
 
 spec:
@@ -13,11 +13,11 @@ spec:
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: student-springboot-react-frontend
+    namespace: mysql
 
   syncPolicy:
     syncOptions:
-      - CreateNamespace=true
+      - CreateNamespace=false
     automated:
       selfHeal: true
       prune: true
